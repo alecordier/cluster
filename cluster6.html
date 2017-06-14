@@ -1,0 +1,99 @@
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="jquery.csv.min.js"></script>
+</head>
+<body>
+
+  <script>
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(init);
+  var data;
+  var count=1;
+  var num=6;
+
+  function init(){
+    for(count; count<16; count++){
+      drawchart(count);
+    }
+  }
+
+  function drawchart(count){
+
+        var req = new XMLHttpRequest();
+        var url= 'testJson.json';
+        req.open("GET", url, true);
+        req.onreadystatechange=function(){
+          if(req.readyState === XMLHttpRequest.DONE && req.status == 200) {
+            data = JSON.parse(req.responseText);
+            var chartData = new google.visualization.DataTable();
+            chartData.addColumn('date', 'Date');
+            chartData.addColumn('number', 'Count');
+            var length = data.Clusters[num].Members.length;
+            //first graph is of average data
+            if (count==1){
+              //loops through and sets date and gets data for each day
+              for(var i =1; i<27; i++){
+                chartData.addRow([ new Date(2017,3,i), data.Clusters[num].Average[i-1] ]);
+              }
+            }
+            //other graphs are of member data
+            //graph first 5 member curves
+          else if(1<count<6){
+            for(var i =1; i<27; i++){
+            chartData.addRow([ new Date(2017,3,i), data.Clusters[num].Members[count][i-1] ]);
+          }}
+          //graph middle 5 member curves
+          else if(6<count<11){
+            for(var i =1; i<27; i++){
+            chartData.addRow([ new Date(2017,3,i), data.Clusters[num].Members[count+(Math.round(length/2))][i-1] ]);
+          }}
+          //graph last 5 member curves
+          else{
+            for(var i =1; i<27; i++){
+            chartData.addRow([ new Date(2017,3,i), data.Clusters[num].Members[length-count][i-1] ]);
+          }}
+
+          var chart = new google.visualization.ChartWrapper()
+            chart.setContainerId('chart'+count+'_div');
+            chart.setChartType('LineChart');
+            chart.setDataTable(chartData);
+            chart.setOptions({
+              'chartArea': {'width': '70%', 'height': '80%'},
+              'legend':'none',
+              'colors':['orange']
+            });
+          chart.draw();
+          }
+        };
+       req.send();
+     }
+
+  </script>
+  <h1 align='center' style= 'font-family: sans-serif'>Cluster 6</h1>
+  <h2 style= 'font-family: sans-serif'>Average</h2>
+
+  <div id='chart1_div' style="width: 900px; height: 500px"></div>
+
+  <h2 style= 'font-family: sans-serif'>Member Charts</h2>
+  <div id='chart2_div' style="width: 900px; height: 500px"></div>
+  <div id='chart3_div' style="width: 900px; height: 500px"></div>
+  <div id='chart4_div' style="width: 900px; height: 500px"></div>
+  <div id='chart5_div' style="width: 900px; height: 500px"></div>
+  <div id='chart6_div' style="width: 900px; height: 500px"></div>
+  <div id='chart7_div' style="width: 900px; height: 500px"></div>
+  <div id='chart8_div' style="width: 900px; height: 500px"></div>
+  <div id='chart9_div' style="width: 900px; height: 500px"></div>
+  <div id='chart10_div' style="width: 900px; height: 500px"></div>
+  <div id='chart11_div' style="width: 900px; height: 500px"></div>
+  <div id='chart12_div' style="width: 900px; height: 500px"></div>
+  <div id='chart13_div' style="width: 900px; height: 500px"></div>
+  <div id='chart14_div' style="width: 900px; height: 500px"></div>
+  <div id='chart15_div' style="width: 900px; height: 500px"></div>
+
+
+
+</body>
+</html>
